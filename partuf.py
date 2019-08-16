@@ -1,8 +1,77 @@
+Meu Drive
+Ontem
+qui 12:17
+
+Você compartilhou 1 item
+Texto
+partuf.py
+Pode ver
+Qualquer pessoa com o link
+qui 12:08
+
+Você editou 1 item
+Arquivo compactado
+partuf_windows.rar
+qui 10:28
+
+Você fez o upload de 1 item
+Arquivo compactado
+partuf_windows.rar
+qui 10:05
+
+Você criou e compartilhou um item em
+Pasta do Google Drive
+PROGRAMAS E APKS
+Pasta do Google Drive
+Partuf
+Pode ver
+Qualquer pessoa com o link
+No início desta semana
+qua 16:20
+
+Você editou 1 item
+Colaboratory
+Untitled2.ipynb
+qua 10:13
+
+Você fez o upload de 1 item
+Texto
+partuf.py
+ter 16:09
+
+Você editou 1 item
+Colaboratory
+Untitled2.ipynb
+ter 16:06
+
+Você renomeou 1 item
+Colaboratory
+Untitled2.ipynb
+Untitled
+ter 16:06
+
+Você fez o upload de 1 item
+Colaboratory
+Untitled
+Semana passada
+5 de ago
+
+Vocêmoveu 307 itens para a lixeira
+Arquivo desconhecido
+hp_roman8.pyc
+Arquivo desconhecido
+__init__.pyc
+Arquivo desconhecido
+cp850.pyc
+Arquivo desconhecido
+iso2022_jp_2004.pyc
+Arquivo desconhecido
+iso8859_3.pyc
+Arquivo desconhecido
+cp862.pyc
 import requests
 from bs4 import BeautifulSoup
-import os
 import subprocess
-import socket
 
 busca = input('Nome do filme: ')
 busca = busca.split()
@@ -17,7 +86,7 @@ url = concatenando + busca[len(busca)-1]
 url_final = 'https://www.baixarfilmetorrent.net/?s='+url
 
 print()
-print("Carregando filmes encontrados...")
+print(url_final)
 print()
 
 req = requests.get(url_final)
@@ -47,7 +116,6 @@ html_magnetic = soup.find_all("td", {'class':  'td-mv-dow'})
 resolut = []
 magnetico = []
 
-print()
 for link_mag in range(0, len(html_magnetic)):
     resolut.append(html_qualidades[link_mag].string)
     magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
@@ -61,9 +129,4 @@ mag_final = magnetico[selected_resolution]
 
 print()
 print("Aguarde o carregamento... \nEnjoy!!")
-
-start = "peerflix", mag_final
-server = " ".join(start)
-ip = socket.gethostbyname(socket.gethostname())
-vlc = subprocess.Popen(f"vlc.exe http://{ip}:8888")
-subir_server = os.system(server)
+start = subprocess.check_call(["peerflix", mag_final, "--vlc"])
