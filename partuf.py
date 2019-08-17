@@ -54,7 +54,7 @@ for cont in range(0, len(magnetico)):
 
 print()
 selected_resolution = int(input('Esolha a resolução: '))
-mag_final = magnetico[selected_resolution]
+mag_final = magnetico[selected_resolution - 1]
 
 print()
 print("Aguarde o carregamento... \nEnjoy!!")
