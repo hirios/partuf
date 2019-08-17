@@ -14,13 +14,13 @@ Teria como evitar o erro, mas para isso precisa que o vlc esteja instalado na m�
 
 # Linux Users:
 
-Instale primeiramente o vlc na sua máquina 
+Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no terminal:
 
-``` pip install bs4 requests```
+```pip install bs4 requests```
 
-``` npm install -g peerflix```
+```npm install -g peerflix```
 
-``` python partuf.py```
+```python partuf.py```
 
 # Caso nao use vlc:
 Altere a última linha do código para:
