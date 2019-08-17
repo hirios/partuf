@@ -9,7 +9,7 @@ https://github.com/hirios/partuf/releases
 
 2) Rode o partuf.exe
 
-obs: Obs: Quando o vlc for aberto, muito provavelmente surgirá um erro dizendo que o a url do localhost não está transmitindo nada. Ignore o erro e clique no botão play e aguarde carregar (isso demora uns 2 minutos em média :/), possa ser que tenha que apertar novamente no botão play, então, caso não inicie de primeira, repita o processo.
+Obs: Quando o vlc for aberto, muito provavelmente surgirá um erro dizendo que o a url do localhost não está transmitindo nada. Ignore o erro e clique no botão play e aguarde carregar (isso demora uns 2 minutos em média :/), possa ser que tenha que apertar novamente no botão play, então, caso não inicie de primeira, repita o processo.
 Teria como evitar o erro, mas para isso precisa que o vlc esteja instalado na máquina, no casso dessa versão, ela utiliza explicitamente o vlc portable que está na pasta.
 
 # Linux Users:
