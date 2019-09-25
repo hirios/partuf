@@ -16,7 +16,7 @@ Teria como evitar o erro, mas para isso precisa que o vlc esteja instalado na m�
 
 Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no terminal:
 
-```pip install bs4 requests```
+```pip install bs4 requests huepy```
 
 ```npm install -g peerflix```
 
