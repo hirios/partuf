@@ -22,6 +22,10 @@ Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no
 
 ```python partuf.py```
 
+Ou vocês podem fazer o mesmo numa única linha:
+
+```sudo pip3 install bs4 requests huepy fire && sudo apt install nodejs && sudo apt install npm && sudo npm install -g peerflix```
+
 # Caso nao use vlc:
 Altere a última linha do código para:
 
