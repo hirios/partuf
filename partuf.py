@@ -3,6 +3,17 @@ import huepy
 from huepy import *
 from bs4 import BeautifulSoup
 import subprocess
+import fire
+import os 
+
+escolha = 0
+
+def option(numero):
+    global escolha
+    escolha = int(numero)
+
+if __name__ == '__main__':
+    fire.Fire(option)
 
 busca = input('Nome do filme: ')
 busca = busca.split()
@@ -95,10 +106,11 @@ if len(magnetico) == 0:
     
     selected_resolution = int(input('Esolha a resolução: '))
     mag_final = magnetico[selected_resolution - 1]
-    print(mag_final)
+    #print(mag_final)
 
     print()
     print("Aguarde o carregamento... \nEnjoy!!")
+
     start = subprocess.check_call(["peerflix", mag_final, "--vlc"])
     
 # SE FOR UM FILME
@@ -110,7 +122,18 @@ else:
     selected_resolution = int(input('Esolha a resolução: '))
     mag_final = magnetico[selected_resolution - 1]
     
-    print()
-    print("Aguarde o carregamento... \nEnjoy!!")
-    start = subprocess.check_call(["peerflix", mag_final], "--vlc")
+    if escolha == 0:
+        print()
+        print("Aguarde o carregamento... \nEnjoy!!")
+        start = subprocess.check_call(["peerflix", mag_final, "--vlc"])
+
+    elif escolha == 1:
+        print()
+        print("Download iniciado... ")
+        start = subprocess.check_call(["peerflix", mag_final, os.getcwd()])
+
+    elif escolha == 2:
+        print()
+        print("Link magnético:")
+        print(mag_final)
 
