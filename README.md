@@ -14,15 +14,15 @@ Teria como evitar o erro, mas para isso precisa que o vlc esteja instalado na m�
 
 # Linux Users:
 
-Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no terminal:
+Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no terminal (se você tiver o pip, node e npm instalados):
 
-```pip install bs4 requests huepy```
+```pip install bs4 requests huepy fire```
 
 ```npm install -g peerflix```
 
 ```python partuf.py```
 
-Ou vocês podem fazer o mesmo numa única linha:
+Ou vocês pode instalar tudo de vez com essa única linha:
 
 ```sudo pip3 install bs4 requests huepy fire && sudo apt install nodejs && sudo apt install npm && sudo npm install -g peerflix```
 
