@@ -24,7 +24,7 @@ Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no
 
 Ou vocês pode instalar tudo de vez com essa única linha:
 
-```sudo pip3 install bs4 requests huepy fire && sudo apt install nodejs && sudo apt install npm && sudo npm install -g peerflix```
+```sudo pip3 install bs4 requests huepy fire && sudo apt install nodejs && sudo apt install npm && sudo npm install -g peerflix && sudo apt install vlc```
 
 # Caso nao use vlc:
 Altere a última linha do código para:
