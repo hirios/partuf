@@ -112,12 +112,12 @@ while True:
         if escolha == 0:
             print()
             print("Aguarde o carregamento... \nEnjoy!!")
-            start = subprocess.check_call(["peerflix", mag_final, "--vlc"])
+            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
 
         elif escolha == 1:
             print()
             print("Download iniciado... ")
-            start = subprocess.check_call(["peerflix", mag_final, os.getcwd()])
+            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
 
         elif escolha == 2:
             print()
@@ -137,12 +137,12 @@ while True:
         if escolha == 0:
             print()
             print("Aguarde o carregamento... \nEnjoy!!")
-            start = subprocess.check_call(["peerflix", mag_final, "--vlc"])
+            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
 
         elif escolha == 1:
             print()
             print("Download iniciado... ")
-            start = subprocess.check_call(["peerflix", mag_final, os.getcwd()])
+            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
 
         elif escolha == 2:
             print()
