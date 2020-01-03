@@ -87,3 +87,112 @@ def layout_selecionar_filmes():
     window = sg.Window('Títulos', layout)
     event, values = window.read()
     window.close()
+
+    posit = 666
+    for p in range(0, len(titulos)):
+        if titulos[p] == values[0][0]:
+            posit = p
+    return posit + 1
+
+
+def table():
+    global tabelas
+    
+    print()
+    select_number = layout_selecionar_filmes()
+    lin = links[select_number - 1]
+    
+    link = requests.get(lin)
+    soup = BeautifulSoup(link.text, 'html.parser')
+    tabelas = soup.find_all("table")
+    return None
+
+#######################
+resolut = []
+magnetico = []
+#######################
+
+# **PARA FILMES** Adiciona resolucoes e links magneticos as suas respectivas listas
+def lista_com_magneticos_filmes():
+    for tabela in range(0, len(tabelas)):
+        single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
+        strong = single_table.find("strong")
+
+        try:
+            html_qualidades = single_table.find_all("td", {'class':  'td-mv-res'})
+            html_magnetic = single_table.find_all("td", {'class':  'td-mv-dow'})
+
+            for quali in range(0, len(html_qualidades)):
+                resolut.append(f"{html_qualidades[quali].string} {strong.string}")
+
+            for link_mag in range(len(html_magnetic)):
+                magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
+        except:
+            pass
+        
+# **PARA SERIES** Adiciona resolucoes e links magneticos as suas respectivas listas 
+def lista_com_magneticos_series():
+    if len(magnetico) == 0:
+        for tabela in range(0, len(tabelas)):
+            single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
+            strong = single_table.find("strong")
+
+            # HTML para episódios da série
+            html_num_epi = single_table.find_all("td", {'class': 'td-ep-eps'})
+            html_qualidades = single_table.find_all("td", {'class': 'td-ep-res'})
+            html_magnetic = single_table.find_all("td", {'class': 'td-ep-dow'})
+
+            for quali in range(0, len(html_qualidades)):
+                resolut.append(f"{yellow(html_num_epi[quali].string.replace('Ep.', '-'))} {orange('->>')} {html_qualidades[quali].string} {strong.string}")
+                magnetico.append(str(html_magnetic[quali]).split('"')[3])
+                
+        magnetico.append("")
+        resolut.append("")
+
+
+def layout_selecionar_resolucao():
+    if len(magnetico) != 0:
+        for cont in range(0, len(magnetico)):
+            print([cont + 1], resolut[cont])
+
+    layout = [[sg.Listbox(resolut, size=(60, 18), font='Arial 18')],
+              [sg.OK()]]
+    window = sg.Window('Resolut', layout)
+    event, values = window.read()
+    window.close()
+
+    posit = 666
+    for p in range(0, len(resolut)):
+        if resolut[p] == values[0][0]:
+            posit = p
+    return posit + 1
+
+
+def opcoes_de_uso():
+    global escolha
+    selected_resolution = layout_selecionar_resolucao()
+    mag_final = magnetico[selected_resolution - 1]
+
+    if escolha == 0:
+        print()
+        print("Aguarde o carregamento... \nEnjoy!!")
+        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
+
+    elif escolha == 1:
+        print()
+        print("Download iniciado... ")
+        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
+
+    elif escolha == 2:
+        print()
+        print("Link magnético:")
+        print(mag_final)
+        print()                               
+
+
+while True:
+    mostrar_lista_filmes() # Essa função chama outra função chamada "url_scrape(), a "url_scrape" chama a "layout_inicial()".
+    table() # Table chama "layout_selecionar_filmes()"
+    lista_magneticos_do_filme_selecionado()
+    lista_magneticos_da_serie_selecionada()
+    opcoes_de_uso()
