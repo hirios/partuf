@@ -13,19 +13,33 @@ pip install bs4 cfscrape PySimpleGUI huepy fire
 npm install -g peerflix
 ```
 
-Versão com GUI:
+Se você usa **línux**, tente usar esse comando em linha única:
+
+```sudo pip install bs4 requests huepy fire cfscrape PySimpleGUI && sudo apt install nodejs && sudo apt install npm && sudo npm install -g peerflix && sudo apt install vlc```
+
+
+Versão com **GUI**:
 
 ```
 python partuf_gui.py
 ```
 
-Versão console:
+Versão **console**:
+
+1) Para assistir ao streaming do filme/série:
 ```
 python partuf.py
 ```
 
-Se você usa línux, tente usar esse comando em linha única:
+2) Para somente baixar o filme/série: 
+```
+python partuf.py 1
+```
 
-```sudo pip install bs4 requests huepy fire cfscrape PySimpleGUI && sudo apt install nodejs && sudo apt install npm && sudo npm install -g peerflix && sudo apt install vlc```
+3) Para capturar o link magnético do filme/série: 
+```
+python partuf.py 2
+```
+
 
 
