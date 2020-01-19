@@ -1,5 +1,5 @@
 # Partuf
-Busque e faça streaming de filmes enquanto baixe, via torent (link magnêtico). 
+Busque e assista streaming de filmes enquanto faz download via torent (link magnêtico). 
 
 # Linux Users:
 
