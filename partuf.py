@@ -153,4 +153,3 @@ while True:
             print("Link magnético:")
             print(mag_final)
             print()
-
