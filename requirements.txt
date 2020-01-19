@@ -1,14 +1,6 @@
-beautifulsoup4==4.8.2
 bs4==0.0.1
-certifi==2019.11.28
 cfscrape==2.0.8
-chardet==3.0.4
 fire==0.2.1
 huepy==1.2.1
-idna==2.8
 PySimpleGUI==4.15.2
 requests==2.22.0
-six==1.14.0
-soupsieve==1.9.5
-termcolor==1.1.0
-urllib3==1.25.7
