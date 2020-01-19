@@ -16,7 +16,7 @@ Teria como evitar o erro, mas para isso precisa que o vlc esteja instalado na m�
 
 Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no terminal (se você tiver o pip, node e npm instalados):
 
-```pip install bs4 requests huepy fire```
+```pip install bs4 cfscrape PySimpleGUI huepy fire```
 
 ```npm install -g peerflix```
 
