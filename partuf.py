@@ -113,7 +113,7 @@ magnetico = []
 #######################
 
 # **PARA FILMES** Adiciona resolucoes e links magneticos as suas respectivas listas
-def lista_com_magneticos_filmes():
+def lista_magneticos_do_filme_selecionado():
     for tabela in range(0, len(tabelas)):
         single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
         strong = single_table.find("strong")
@@ -131,7 +131,7 @@ def lista_com_magneticos_filmes():
             pass
         
 # **PARA SERIES** Adiciona resolucoes e links magneticos as suas respectivas listas 
-def lista_com_magneticos_series():
+def lista_magneticos_da_serie_selecionada():
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
             single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
@@ -196,3 +196,5 @@ while True:
     lista_magneticos_do_filme_selecionado()
     lista_magneticos_da_serie_selecionada()
     opcoes_de_uso()
+
+
