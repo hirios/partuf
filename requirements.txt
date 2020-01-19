@@ -3,4 +3,3 @@ cfscrape==2.0.8
 fire==0.2.1
 huepy==1.2.1
 PySimpleGUI==4.15.2
-requests==2.22.0
