@@ -9,13 +9,13 @@ import os
 
 
 requests = cfscrape.create_scraper()
-
+sg.theme("Default")
 
 escolha = 0
 def option(numero=0):
     global escolha
     escolha = int(numero)
-    
+
 if __name__ == '__main__':
     fire.Fire(option)
 
@@ -28,7 +28,7 @@ def layout_inicial():
                sg.Radio('Link Magnético!', "1")],
               [sg.Input(size=(80,1))],
               [sg.Cancel(), sg.OK()]]
-              
+
     window = sg.Window('Partuf', layout)
     event, values = window.read()
     window.close()
@@ -39,7 +39,7 @@ def layout_inicial():
         escolha = 1
     elif values[2] is True:
         escolha = 2
-        
+
     return values[3]
 
 
@@ -60,7 +60,7 @@ def url_scrape():
 
 def mostrar_lista_filmes():
     global titulos, links
-    
+
     print()
     print("Carregando lista de filmes...")
     print()
@@ -97,11 +97,11 @@ def layout_selecionar_filmes():
 
 def table():
     global tabelas
-    
+
     print()
     select_number = layout_selecionar_filmes()
     lin = links[select_number - 1]
-    
+
     link = requests.get(lin)
     soup = BeautifulSoup(link.text, 'html.parser')
     tabelas = soup.find_all("table")
@@ -129,8 +129,8 @@ def lista_magneticos_do_filme_selecionado():
                 magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
         except:
             pass
-        
-# **PARA SERIES** Adiciona resolucoes e links magneticos as suas respectivas listas 
+
+# **PARA SERIES** Adiciona resolucoes e links magneticos as suas respectivas listas
 def lista_magneticos_da_serie_selecionada():
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
@@ -145,7 +145,7 @@ def lista_magneticos_da_serie_selecionada():
             for quali in range(0, len(html_qualidades)):
                 resolut.append(f"{yellow(html_num_epi[quali].string.replace('Ep.', '-'))} {orange('->>')} {html_qualidades[quali].string} {strong.string}")
                 magnetico.append(str(html_magnetic[quali]).split('"')[3])
-                
+
         magnetico.append("")
         resolut.append("")
 
@@ -187,7 +187,9 @@ def opcoes_de_uso():
         print()
         print("Link magnético:")
         print(mag_final)
-        print()                               
+        print()
+        sg.Window('Link magnético:', [[sg.Multiline(default_text=f'{mag_final}', size=(len(mag_final), 10))]]).Read()
+
 
 
 while True:
@@ -196,5 +198,3 @@ while True:
     lista_magneticos_do_filme_selecionado()
     lista_magneticos_da_serie_selecionada()
     opcoes_de_uso()
-
-
