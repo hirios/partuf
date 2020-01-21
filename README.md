@@ -24,6 +24,12 @@ Se você usa **línux**, tente usar esse comando em linha única:
 python partuf_gui.py
 ```
 
+![Image description](https://user-images.githubusercontent.com/35049559/72764850-745d7000-3bc8-11ea-802a-f2cbb1f14887.png)
+![Image description](https://user-images.githubusercontent.com/35049559/72764851-74f60680-3bc8-11ea-8261-49d0d0bec2eb.png)
+![Image description](https://user-images.githubusercontent.com/35049559/72764852-74f60680-3bc8-11ea-96e2-8ba7e6059a53.png)
+![Image description](https://user-images.githubusercontent.com/35049559/72764853-758e9d00-3bc8-11ea-8981-7ffb56e43260.png)
+
+
 **Versão console**:
 
 1) Para assistir ao streaming do filme/série:
