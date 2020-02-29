@@ -1,67 +1,71 @@
-import huepy
-from huepy import *
 from bs4 import BeautifulSoup
 import subprocess
 import cfscrape
 import fire
-import os 
-
+import os
 requests = cfscrape.create_scraper()
 
-
-escolha = 0
-
-def option(numero=0):
-    global escolha
-    escolha = int(numero)
-
-if __name__ == '__main__':
-    fire.Fire(option)
+options = 1
+tabelas = None
+resolut = []
+magnetico = []
 
 
-while True:
+def url_scrape():
     busca = input('Nome do filme: ')
     busca = busca.split()
     termos_da_busca = []
-
+    # -1 porque o último termo será excluido (pois não tem o sinal [+] na url)
     for item in range(len(busca)-1):
         termos_da_busca.append(busca[item] + '+')
-
     concatenando = "".join(termos_da_busca)
-    # busca[len(busca)-1] Retorna a último palavra capturada pelo input
-    url = concatenando + busca[len(busca)-1]
+    # Último termo é aderido a url de busca
+    url = concatenando + busca[-1]
     url_final = 'https://www.baixarfilmetorrent.net/?s='+url
+    return url_final
 
-    print()
-    print("Carregando lista de filmes...")
-    print()
 
-    req = requests.get(url_final)
+def show_movie_list():
+    """
+    Mostra a lista de filmes e armazena a url de cada um deles em [links]
+    """
+
+    req = requests.get(url_scrape())
     soup = BeautifulSoup(req.text, 'html.parser')
     listagem_da_pesquisa = soup.find_all("div", {'class':  'item'})
-
     titulos = []
     links = []
 
     for filme in listagem_da_pesquisa:
         titulos.append(str(filme).split('"')[5])
         links.append(str(filme).split('"')[3])
-
     for titulo in range(0, len(titulos)):
         print([titulo + 1], titulos[titulo])
-
     print()
+    print("\nCarregando lista de filmes...\n")
+
+    return links
+
+
+def get_tables():
+    """
+    Retorna a tabela com links-magneticos do filme selecionado
+    """
+    movie_list = show_movie_list()
     select_number = int(input('Selecione um número: '))
-    lin = links[select_number - 1]
+    url_of_movie = movie_list[select_number - 1]
 
-    link = requests.get(lin)
-    soup = BeautifulSoup(link.text, 'html.parser')
+    html = requests.get(url_of_movie)
+    soup = BeautifulSoup(html.text, 'html.parser')
     tabelas = soup.find_all("table")
+    return tabelas
 
-    resolut = []
-    magnetico = []
 
-    # Para filmes
+def magnetics_and_resolution_of_movies():
+    """
+    PARA FILMES: Adiciona resolucoes e links magneticos às suas respectivas listas
+    """
+    global tabelas, resolut, magnetico
     for tabela in range(0, len(tabelas)):
         single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
         strong = single_table.find("strong")
@@ -78,78 +82,64 @@ while True:
         except:
             pass
 
-    # SE NÃO FOR UM FILME
+
+def magnetics_and_resolution_of_series():
+    """
+    PARA SERIES: Adiciona resolucoes e links magneticos as suas respectivas listas
+    """
+    global tabelas, resolut, magnetico
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
             single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
             strong = single_table.find("strong")
 
-            # HTML para episódios de séries
+            # HTML para episódios da série
             html_num_epi = single_table.find_all("td", {'class': 'td-ep-eps'})
             html_qualidades = single_table.find_all("td", {'class': 'td-ep-res'})
             html_magnetic = single_table.find_all("td", {'class': 'td-ep-dow'})
 
             for quali in range(0, len(html_qualidades)):
-                resolut.append(f"{yellow(html_num_epi[quali].string.replace('Ep.', '-'))} {orange('->>')} {html_qualidades[quali].string} {strong.string}")
+                resolut.append(f"{html_num_epi[quali].string.replace('Ep.', '-')} {'->>'} {html_qualidades[quali].string} {strong.string}")
                 magnetico.append(str(html_magnetic[quali]).split('"')[3])
 
         magnetico.append("")
         resolut.append("")
 
-    # Verifica se espaços em branco, se tiver ignora os primeiros
-        space = 1
-        for c in resolut:
-            if len(c) != 0:
-                print([space], c)
-                space += 1
-    #        if c == "" and space == 0:
-    #            resolut.pop(c)
-    #        else:
-    #            space = 1
-    #            print(c)
+
+def select_resolution():
+    c = 1
+    for x in resolut:
+        print([c], x)
+        c += 1
+
+    selected_resolution = int(input('\nEsolha a resolução: '))
+    mag_final = magnetico[selected_resolution - 1]
+    return mag_final
 
 
-        selected_resolution = int(input('Esolha a resolução: '))
-        mag_final = magnetico[selected_resolution - 1]
-        #print(mag_final)
+def options(numero=1):
+    global options
+    options = int(numero)
 
-        if escolha == 0:
-            print()
-            print("Aguarde o carregamento... \nEnjoy!!")
-            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
-
-        elif escolha == 1:
-            print()
-            print("Download iniciado... ")
-            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
-
-        elif escolha == 2:
-            print()
-            print("Link magnético:")
-            print(mag_final)
-            print()                               
-                               
-    # SE FOR UM FILME
-    else:
-        for cont in range(0, len(magnetico)):
-            print([cont + 1], resolut[cont])
-
+    mag_final = select_resolution()
+    # Faz streming enquanto realiza o download
+    if options == 1:
+        print("\nAguarde o carregamento... \nEnjoy!!\n")
+        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
+    # Somente faz o download
+    elif options == 2:
+        print("\nDownload iniciado...\n")
+        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
+    # Retorna o link magnético
+    elif options == 3:
+        print("\nLink magnético:\n")
+        print(mag_final)
         print()
-        selected_resolution = int(input('Esolha a resolução: '))
-        mag_final = magnetico[selected_resolution - 1]
 
-        if escolha == 0:
-            print()
-            print("Aguarde o carregamento... \nEnjoy!!")
-            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
 
-        elif escolha == 1:
-            print()
-            print("Download iniciado... ")
-            start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
-
-        elif escolha == 2:
-            print()
-            print("Link magnético:")
-            print(mag_final)
-            print()
+while True:
+    if __name__ == '__main__':
+        tabelas = get_tables()
+        magnetics_and_resolution_of_movies()
+        magnetics_and_resolution_of_series()
+        fire.Fire(options)
