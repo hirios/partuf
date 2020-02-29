@@ -1,10 +1,7 @@
-import huepy
-from huepy import *
 from bs4 import BeautifulSoup
 import PySimpleGUI as sg
 import subprocess
 import cfscrape
-import fire
 import os
 
 
@@ -12,14 +9,6 @@ requests = cfscrape.create_scraper()
 sg.theme("Default")
 
 escolha = 0
-def option(numero=0):
-    global escolha
-    escolha = int(numero)
-
-if __name__ == '__main__':
-    fire.Fire(option)
-
-
 def layout_inicial():
     global escolha
     layout = [[sg.Text(16*" " + 'PARTUF - SUA FERRAMENTA DE STREAMING E DOWNLOAD DE TORRENT', size=(80,2))],
@@ -143,7 +132,7 @@ def lista_magneticos_da_serie_selecionada():
             html_magnetic = single_table.find_all("td", {'class': 'td-ep-dow'})
 
             for quali in range(0, len(html_qualidades)):
-                resolut.append(f"{yellow(html_num_epi[quali].string.replace('Ep.', '-'))} {orange('->>')} {html_qualidades[quali].string} {strong.string}")
+                resolut.append(f"{html_num_epi[quali].string.replace('Ep.', '-')} {'->>'} {html_qualidades[quali].string} {strong.string}")
                 magnetico.append(str(html_magnetic[quali]).split('"')[3])
 
         magnetico.append("")
@@ -165,7 +154,7 @@ def layout_selecionar_resolucao():
     for p in range(0, len(resolut)):
         if resolut[p] == values[0][0]:
             posit = p
-    return posit + 1
+    return posit
 
 
 def opcoes_de_uso():
