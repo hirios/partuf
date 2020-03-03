@@ -1,13 +1,13 @@
 from bs4 import BeautifulSoup
 from shutil import which
 from zipfile import ZipFile
-from subprocess import Popen
-from cfscrape import create_scraper
-from socket import gethostbyname, gethostname
-from fire import Fire
-from os import popen, path, system, remove, getcwd
-from time import sleep
-requests = create_scraper()
+import subprocess
+import cfscrape
+import socket
+import fire
+import os
+import time
+requests = cfscrape.create_scraper()
 
 
 use = 666
@@ -15,7 +15,7 @@ options = 1
 tabelas = None
 resolut = []
 magnetico = []
-localhost = gethostbyname(gethostname())
+localhost = socket.gethostbyname(socket.gethostname())
 
 
 def pacotes():
@@ -34,8 +34,8 @@ def pacotes():
         
         with ZipFile("requisitos.zip", "r") as extract:
                 extract.extractall()
-        remove("requisitos.zip")
-        system("cls")
+        os.remove("requisitos.zip")
+        os.system("cls")
     except:
         print("!!!!! Servidor de dependências não inoperante !!!!!")
 
@@ -44,8 +44,8 @@ def process_status():
     print("\n[+] Uma nova janela de instalação foi aberta\n[+] Prossiga você mesmo a instalação do Node") 
     msiexec = 1
     while msiexec != 0:
-        sleep(3)
-        processos = popen(f'tasklist /FI "STATUS eq running" | more').read()
+        time.sleep(3)
+        processos = os.popen(f'tasklist /FI "STATUS eq running" | more').read()
         lista_processos = processos.split()
         msiexec = len([x for x in lista_processos if x.find("msiexec") != -1])
                 
@@ -55,32 +55,32 @@ def dependencias():
     if not which("npm"):
         if os.path.isfile(os.path.join("dependencias", "node.msi")):
             print("[+] Instalando Node...")
-            popen(path.join("dependencias", "node.msi"))
+            os.popen(os.path.join("dependencias", "node.msi"))
             process_status()
             use = 1
         else:
             print("[+] Iniciando download do Node...")
             pacotes()
             print("[+] Instalando node.js")
-            popen(path.join("dependencias", "node.msi"))
+            os.popen(os.path.join("dependencias", "node.msi"))
             process_status()
             use = 1
-        system("cls")
-        sleep(1)
+        os.system("cls")
+        time.sleep(1)
         
     if not which("peerflix"):
         try:    
             print("[+] Iniciando instalação do Peerflix...")
-            system(path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
-            system("cls")
+            os.system(os.path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
+            os.system("cls")
         except:
             print("Erro ao instalar peerflix!")
         use = 1
 
-    if not path.isdir(path.join("dependencias", "vlc")):
+    if not os.path.isdir(os.path.join("dependencias", "vlc")):
         pacotes()
         use = 1
-    if not path.isfile(path.join("dependencias", "refreshenv.cmd")):
+    if not os.path.isfile(os.path.join("dependencias", "refreshenv.cmd")):
         pacotes()
         use = 1
 
@@ -195,22 +195,22 @@ def options(numero=1):
     if options == 1:
         print("\nAguarde o carregamento... \nEnjoy!!\n")
         if use == 666:
-            start_host = Popen(["peerflix", mag_final, "--path", getcwd()], shell=True)
-            sleep(3)
-            start_vlc = Popen([path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True) 
+            start_host = subprocess.Popen(["peerflix", mag_final, "--path", os.getcwd()], shell=True)
+            time.sleep(3)
+            start_vlc = subprocess.Popen([os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True) 
         else:
-            start_host = Popen([path.join("dependencias", "refreshenv.cmd") + " & peerflix", mag_final, "--path", getcwd()], shell=True)
-            sleep(3)
-            start_vlc = Popen([path.join("dependencias", "refreshenv.cmd") + " & " + path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True)
+            start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + " & peerflix", mag_final, "--path", os.getcwd()], shell=True)
+            time.sleep(3)
+            start_vlc = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + " & " + os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True)
 
         
     # Somente faz o download
     elif options == 2:
         print("\nDownload iniciado...\n")
         if use == 666:
-            start_host = Popen(["peerflix", mag_final, "--path", getcwd()])
+            start_host = subprocess.Popen(["peerflix", mag_final, "--path", os.getcwd()])
         else:
-            start_host = Popen([path.join("dependencias", "refreshenv.cmd") + " & peerflix", mag_final, "--path", getcwd()])
+            start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + " & peerflix", mag_final, "--path", os.getcwd()])
 
 
     # Retorna o link magnético
@@ -226,4 +226,4 @@ while True:
         tabelas = get_tables()
         magnetics_and_resolution_of_movies()
         magnetics_and_resolution_of_series()
-        Fire(options)
+        fire.Fire(options)
