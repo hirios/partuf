@@ -20,14 +20,12 @@ localhost = socket.gethostbyname(socket.gethostname())
 
 def pacotes():
     print("[+] Fazendo download de dependêndencias")
-    
     try:
         zip_html = requests.get("https://www71.zippyshare.com/v/UQmnOz27/file.html").text.replace('(','"'). replace(')', '"')
         zip_html = zip_html.split('"')
         index = zip_html.index("/d/UQmnOz27/")
         url_zip = "https://www71.zippyshare.com/d/UQmnOz27/" + str(eval(zip_html[index + 2])) + "/dependencias.zip"
         
-
         arquivo = requests.get(url_zip)                         
         with open("requisitos.zip", "wb") as r:
             r.write(arquivo.content)
@@ -76,10 +74,11 @@ def dependencias():
         except:
             print("Erro ao instalar peerflix!")
         use = 1
-
+        
     if not os.path.isdir(os.path.join("dependencias", "vlc")):
         pacotes()
         use = 1
+        
     if not os.path.isfile(os.path.join("dependencias", "refreshenv.cmd")):
         pacotes()
         use = 1
