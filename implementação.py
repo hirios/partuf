@@ -39,6 +39,7 @@ def pacotes():
 
 
 def process_status():
+    """ Verifica se a instalação do Node foi encerrada """
     print("\n[+] Uma nova janela de instalação foi aberta\n[+] Prossiga você mesmo a instalação do Node") 
     msiexec = 1
     while msiexec != 0:
@@ -49,6 +50,7 @@ def process_status():
                 
 
 def dependencias():
+    """ Verifica se alguma instalação está faltando e as instala se for o caso """
     global use
     if not which("npm"):
         if os.path.isfile(os.path.join("dependencias", "node.msi")):
