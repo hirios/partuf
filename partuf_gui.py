@@ -71,10 +71,14 @@ def mostrar_lista_filmes():
 
 def layout_selecionar_filmes():
     layout = [[sg.Listbox(titulos, size=(60, 18), font='Arial 18')],
-          [sg.OK()]]
+          [sg.OK(), sg.Button('Voltar')]]
 
     window = sg.Window('Títulos', layout)
     event, values = window.read()
+    
+    if event == 'Voltar':
+        window.close()
+        main()
     window.close()
 
     posit = 666
@@ -145,10 +149,15 @@ def layout_selecionar_resolucao():
             print([cont + 1], resolut[cont])
 
     layout = [[sg.Listbox(resolut, size=(60, 18), font='Arial 18')],
-              [sg.OK()]]
+              [sg.OK(), sg.Button('Voltar')]]
     window = sg.Window('Resolut', layout)
     event, values = window.read()
+    
+    if event == 'Voltar':
+        window.close()
+        main()
     window.close()
+
 
     posit = 666
     for p in range(0, len(resolut)):
@@ -160,7 +169,7 @@ def layout_selecionar_resolucao():
 def opcoes_de_uso():
     global escolha
     selected_resolution = layout_selecionar_resolucao()
-    mag_final = magnetico[selected_resolution - 1]
+    mag_final = magnetico[selected_resolution]
 
     if escolha == 0:
         print()
@@ -180,10 +189,15 @@ def opcoes_de_uso():
         sg.Window('Link magnético:', [[sg.Multiline(default_text=f'{mag_final}', size=(len(mag_final), 10))]]).Read()
 
 
-
-while True:
+def main():
     mostrar_lista_filmes() # Essa função chama outra função chamada "url_scrape(), a "url_scrape" chama a "layout_inicial()".
     table() # Table chama "layout_selecionar_filmes()"
     lista_magneticos_do_filme_selecionado()
     lista_magneticos_da_serie_selecionada()
     opcoes_de_uso()
+    resolut = []
+    magnetico = []
+
+                               
+while True:
+    main()
