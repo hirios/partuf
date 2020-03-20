@@ -6,7 +6,6 @@ import subprocess
 import cfscrape
 import socket
 import os
-import sys
 import time
 requests = cfscrape.create_scraper()
 
