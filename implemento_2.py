@@ -209,7 +209,7 @@ def magnetics_and_resolution_of_movies():
 
 def magnetics_and_resolution_of_series():
     """ PARA SERIES: Adiciona resolucoes e links magneticos as suas respectivas listas """
-    
+    global tabelas,  resolut, magnetico    
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
             single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
@@ -230,7 +230,7 @@ def magnetics_and_resolution_of_series():
 
 
 def magneticos_da_serie_completa():
-    global serie 
+    global serie, tabelas,  resolut, magnetico
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
             single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
@@ -301,35 +301,47 @@ def select_resolution():
         if resolut[p] == values[0][0]:
             posit = p
 
-    selected_resolution = posit
-    mag_final = magnetico[selected_resolution]
+    mag_final = magnetico[posit]
     return mag_final
 
 
-
-if serie:
-    episodes = get_episodes(mag_final)
-    titulos = [x[0] for x in episodes]
-    magnetico = [x[1][0] for x in episodes]
-    print('------------------', select_resolution())
-    
-
+def peneira():
+    global resolut, magnetico
+    if serie:
+        print('ta rodando aqui....')
+        url_magnetico = select_resolution()
+        episodes = get_episodes(url_magnetico)
+        resolut = [x[0] for x in episodes]
+        magnetico = [x[1][0] for x in episodes]
+        return [url_magnetico, select_resolution()]
+    else:
+        return [url_magnetico, '']
+        
 
 
 def options():
     global opt, serie
 
-    mag_final = select_resolution()
+    mag_final, index = peneira()
+    
     
     # Faz streming enquanto realiza o download
     if opt == 1:
         print("\nAguarde o carregamento... \nEnjoy!!\n")
         if use == 666:
-            start_host = subprocess.Popen(["peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+            if index == '':
+                start_host = subprocess.Popen(["peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+            else:
+                start_host = subprocess.Popen(["peerflix", mag_final,"-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
             time.sleep(3)
-            start_vlc = subprocess.run([os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True) 
+            start_vlc = subprocess.run([os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True)
+                
         else:
-            start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", "peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+            if index == '':
+                start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", "peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+            else:
+                start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", "peerflix", "-i", index, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+                
             time.sleep(3)
             start_vlc = subprocess.run([os.path.join("dependencias", "refreshenv.cmd") + "&", os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True)
 
