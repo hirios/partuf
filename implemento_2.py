@@ -16,6 +16,7 @@ icone = b"""iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AABrUklEQVR42u2dCZgcRfnG
 use = 666
 opt = 1
 tabelas = None
+serie = None
 resolut = []
 magnetico = []
 localhost = socket.gethostbyname(socket.gethostname())
@@ -229,6 +230,7 @@ def magnetics_and_resolution_of_series():
 
 
 def magneticos_da_serie_completa():
+    global serie 
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
             single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
@@ -246,6 +248,35 @@ def magneticos_da_serie_completa():
                     magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
             except:
                 pass
+        serie = True
+
+
+def get_episodes(magnetico):
+    lista = os.popen(f'peerflix {magnetico} -l').readlines()
+    lista = [x for x in lista if x.find('.jpg') == -1 and x.find('.txt') == -1 and x.find('.png') == -1 and x.find('.jpeg') == -1 and x.find('.gif') == -1 and x.find('.bmp') == -1 and x.find('.pdf') == -1] 
+    epi_titulos = []
+    index = []
+
+    for x in lista:
+        try:
+
+            epi_titulos.append(x.split("\x1b[35m")[1].split("\x1b[39m")[0])
+        except:
+            print('Não é um título de episódio')
+
+    for x in lista:
+        try:
+            index.append(x.split("\x1b[1m")[1].split("\x1b[22m")[0].strip())
+        except:
+            print('Não é um index de episódio')
+
+    final = []
+    cont = 0
+    for c in epi_titulos:
+        final.append([c, [index[cont]]])
+        cont += 1
+    final = sorted(final)
+    return final
 
 
 def select_resolution():
@@ -275,11 +306,21 @@ def select_resolution():
     return mag_final
 
 
+
+if serie:
+    episodes = get_episodes(mag_final)
+    titulos = [x[0] for x in episodes]
+    magnetico = [x[1][0] for x in episodes]
+    print('------------------', select_resolution())
+    
+
+
+
 def options():
-    global opt
-    #opt = int(numero)
+    global opt, serie
 
     mag_final = select_resolution()
+    
     # Faz streming enquanto realiza o download
     if opt == 1:
         print("\nAguarde o carregamento... \nEnjoy!!\n")
