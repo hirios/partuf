@@ -189,7 +189,6 @@ def get_tables():
 def magnetics_and_resolution_of_movies():
     """ PARA FILMES: Adiciona resolucoes e links magneticos às suas respectivas listas """
     
-    global tabelas, resolut, magnetico
     for tabela in range(0, len(tabelas)):
         single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
         strong = single_table.find("strong")
@@ -208,10 +207,8 @@ def magnetics_and_resolution_of_movies():
 
 
 def magnetics_and_resolution_of_series():
-    """
-    PARA SERIES: Adiciona resolucoes e links magneticos as suas respectivas listas
-    """
-    global tabelas, resolut, magnetico
+    """ PARA SERIES: Adiciona resolucoes e links magneticos as suas respectivas listas """
+    
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
             single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
@@ -222,12 +219,33 @@ def magnetics_and_resolution_of_series():
             html_qualidades = single_table.find_all("td", {'class': 'td-ep-res'})
             html_magnetic = single_table.find_all("td", {'class': 'td-ep-dow'})
 
-            for quali in range(0, len(html_qualidades)):
-                resolut.append(f"{html_num_epi[quali].string.replace('Ep.', '-')} {'->>'} {html_qualidades[quali].string} {strong.string}")
-                magnetico.append(str(html_magnetic[quali]).split('"')[3])
+            try:
+                for quali in range(0, len(html_qualidades)):
+                    resolut.append(f"{html_num_epi[quali].string.replace('Ep.', '-')} {'->>'} {html_qualidades[quali].string} {strong.string}")
+                for link_mag in range(len(html_magnetic)):
+                    magnetico.append(str(html_magnetic[quali]).split('"')[3])
+            except:
+                pass
 
-        magnetico.append("")
-        resolut.append("")
+
+def magneticos_da_serie_completa():
+    if len(magnetico) == 0:
+        for tabela in range(0, len(tabelas)):
+            single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
+
+            # HTML para episódios da série
+            html_num_epi = single_table.find_all("td", {'class': 'td-tp-aud'})
+            html_qualidades = single_table.find_all("td", {'class': 'td-tp-res'})
+            html_magnetic = single_table.find_all("td", {'class': 'td-tp-dow'})
+            
+            try:
+                for quali in range(0, len(html_qualidades)):
+                    resolut.append(f"{html_num_epi[quali].string} {html_qualidades[quali].string}")
+
+                for link_mag in range(len(html_magnetic)):
+                    magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
+            except:
+                pass
 
 
 def select_resolution():
@@ -292,22 +310,24 @@ def options():
         sg.Window('Link magnético:', [[sg.Multiline(default_text=f'{mag_final}', size=(len(mag_final), 10))]]).Read()
 
 
-
 def main():
     global tabelas, resolut, magnetico, use
-    
+
+    resolut = []
+    magnetico = []
+
     if use == 1:
         pass
     else:
-        dependencias()
-        
+        dependencias()     
+
     tabelas = get_tables()
     magnetics_and_resolution_of_movies()
     magnetics_and_resolution_of_series()
+    magneticos_da_serie_completa()
     options()
-    resolut = []
-    magnetico = []
     process_status('vlc')
+
     try:
         os.system('taskkill /IM "node.exe" /F')
     except:
@@ -316,5 +336,3 @@ def main():
 
 while True:
     main()
-
-        
