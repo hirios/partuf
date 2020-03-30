@@ -40,7 +40,7 @@ def pacotes():
         os.remove("requisitos.zip")
         os.system("cls")
     except:
-        print("!!!!! Servidor de dependências não inoperante !!!!!")
+        print("!!!!! Servidor de dependências inoperante !!!!!")
 
 
 def process_status(programa):
