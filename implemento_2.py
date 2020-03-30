@@ -253,7 +253,7 @@ def magneticos_da_serie_completa():
 
 def get_episodes(magnetico):
     lista = os.popen(f'peerflix {magnetico} -l').readlines()
-    lista = [x for x in lista if x.find('.jpg') == -1 and x.find('.txt') == -1 and x.find('.png') == -1 and x.find('.jpeg') == -1 and x.find('.gif') == -1 and x.find('.bmp') == -1 and x.find('.pdf') == -1] 
+    lista = [x for x in lista if x.find('.jpg') == -1 and x.find('.txt') == -1 and x.find('.srt') == -1 and x.find('.png') == -1 and x.find('.jpeg') == -1 and x.find('.gif') == -1 and x.find('.bmp') == -1 and x.find('.pdf') == -1] 
     epi_titulos = []
     index = []
 
@@ -308,13 +308,13 @@ def select_resolution():
 def peneira():
     global resolut, magnetico
     if serie:
-        print('ta rodando aqui....')
         url_magnetico = select_resolution()
         episodes = get_episodes(url_magnetico)
         resolut = [x[0] for x in episodes]
         magnetico = [x[1][0] for x in episodes]
         return [url_magnetico, select_resolution()]
     else:
+        url_magnetico = select_resolution()
         return [url_magnetico, '']
         
 
