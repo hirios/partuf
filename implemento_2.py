@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import PySimpleGUI as sg
 from shutil import which
 from zipfile import ZipFile
+import threading   
 import subprocess
 import cfscrape
 import socket
@@ -21,6 +22,19 @@ resolut = []
 magnetico = []
 localhost = socket.gethostbyname(socket.gethostname())
 os.system("mkdir %USERPROFILE%\Desktop\Filmes >nul 2>&1")
+try:
+    os.system('taskkill /IM "node.exe" /F')
+except:
+    print('!!! Erro ao finalizar peerflix !!!')
+
+
+def user():
+        user = os.popen("whoami").read().split("\\")[1].strip()
+        return user
+
+
+peerflix_path = f"C:\\Users\\{user()}\\AppData\\Roaming\\npm\\node_modules\\peerflix\\app.js"
+node_path = "nodejs\\node.exe"
 
 
 def pacotes():
@@ -40,46 +54,47 @@ def pacotes():
         os.remove("requisitos.zip")
         os.system("cls")
     except:
-        print("!!!!! Servidor de dependências inoperante !!!!!")
+        print("!!!!! Servidor de dependências não inoperante !!!!!")
 
 
-def process_status(programa):
-    """ Verifica se a instalação do Node foi encerrada """
-    print("\n[+] Uma nova janela de instalação foi aberta\n[+] Prossiga você mesmo a instalação do Node") 
-    msiexec = 1
-    while msiexec != 0:
-        time.sleep(3)
-        processos = os.popen(f'tasklist /FI "STATUS eq running" | more').read()
-        lista_processos = processos.split()
-        msiexec = len([x for x in lista_processos if x.find(programa) != -1])
-                
+def start_and_wait(programa):
+    """ Inicia e verifica estado de um processo """
+    
+    print("\n[+] Um novo processo foi iniciado") 
+    def start(programa=programa):
+        os.system(programa)
+    processo = threading.Thread(target=start)
+    processo.start()
+    while processo.is_alive():
+        time.sleep(1)
+    
 
 def dependencias():
     """ Verifica se alguma instalação está faltando e as instala se for o caso """
+    
     global use
     if not which("npm"):
-        if os.path.isfile(os.path.join("dependencias", "node.msi")):
-            print("[+] Instalando Node...")
-            os.popen(os.path.join("dependencias", "node.msi"))
-            process_status('msiexec')
-            use = 1
+        if os.path.isfile(os.path.join("nodejs", "node.exe")):
+            print("[+] Node encontrado")
         else:
             print("[+] Iniciando download do Node...")
             pacotes()
             print("[+] Instalando node.js")
-            os.popen(os.path.join("dependencias", "node.msi"))
-            process_status('msiexec')
+            start_and_wait("dependencias\\node.msi")
             use = 1
         os.system("cls")
-        time.sleep(1)
         
-    if not which("peerflix"):
+    
+    if not which(f"{peerflix_path}"):
         try:
             layout = [[sg.Text('Instalando peerflix...')]]
             window = sg.Window('Peerflix', layout, icon=icone)
             event, values = window.Read(timeout=100)
             print("[+] Iniciando instalação do Peerflix...")
-            os.system(os.path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
+            try:
+                os.system(os.path.join("nodejs", "npm") + " install -g peerflix")
+            except:
+                os.system(os.path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
             window.close()
             os.system("cls")
         except:
@@ -97,17 +112,22 @@ def dependencias():
 
 def layout_inicial():
     global opt
-    layout = [[sg.Text(16*" " + 'PARTUF - SUA FERRAMENTA DE STREAMING E DOWNLOAD DE TORRENT', size=(80,2))],
-              [sg.Text('                       '), sg.Radio('Streaming!', "1", default=True),
+    layout = [[sg.Text(16*" " + 'PARTUF - SUA FERRAMENTA DE STREAMING E DOWNLOAD DE FILMES E SÉRIES', size=(80,2))],
+              [sg.Text('                                      '), sg.Radio('Streaming!', "1", default=True),
                sg.Radio('Download!', "1"),
-               sg.Radio('Link Magnético!', "1")],
-              [sg.Input(size=(80,1))],
+               sg.Radio('Get Magnético!', "1")],
+              [sg.Input(size=(90,1))],
               [sg.Cancel(), sg.OK()]]
 
     window = sg.Window('Partuf', layout, icon=icone)
     event, values = window.read()
+    if event == None:
+        try:
+            os.system('taskkill /IM "node.exe" /F')
+        except:
+            print('!!! Erro ao finalizar peerflix !!!')
     window.close()
-
+        
     if values[0] is True:
         opt = 1
     elif values[1] is True:
@@ -157,8 +177,8 @@ def layout_selecionar_filmes():
     titulos = listas[1]
     links = listas[0]
     
-    layout = [[sg.Listbox(titulos, size=(60, 18), font='Arial 18')],
-          [sg.OK(), sg.Button('Voltar')]]
+    layout = [[sg.Listbox(titulos, size=(70, 18), font='Arial 18')],
+          [sg.Button("  OK   "), sg.Button('Voltar')]]
 
     window = sg.Window('Títulos', layout, icon=icone)
     event, values = window.read()
@@ -197,9 +217,10 @@ def magnetics_and_resolution_of_movies():
         try:
             html_qualidades = single_table.find_all("td", {'class':  'td-mv-res'})
             html_magnetic = single_table.find_all("td", {'class':  'td-mv-dow'})
-
+            html_tamanho = single_table.find_all("td", {'class': 'td-mv-tam'})   
+            
             for quali in range(0, len(html_qualidades)):
-                resolut.append(f"{html_qualidades[quali].string} {strong.string}")
+                resolut.append(f"{html_qualidades[quali].string} {strong.string}    |||     {html_tamanho[quali].string}")
 
             for link_mag in range(len(html_magnetic)):
                 magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
@@ -252,8 +273,8 @@ def magneticos_da_serie_completa():
 
 
 def get_episodes(magnetico):
-    lista = os.popen(f'peerflix {magnetico} -l').readlines()
-    lista = [x for x in lista if x.find('.jpg') == -1 and x.find('.txt') == -1 and x.find('.srt') == -1 and x.find('.png') == -1 and x.find('.jpeg') == -1 and x.find('.gif') == -1 and x.find('.bmp') == -1 and x.find('.pdf') == -1] 
+    lista = os.popen(f'{node_path} {peerflix_path} {magnetico} -l').readlines()
+    lista = [x for x in lista if x.find('.jpg') == -1 and x.find('.srt') == -1 and x.find('.txt') == -1 and x.find('.png') == -1 and x.find('.jpeg') == -1 and x.find('.gif') == -1 and x.find('.bmp') == -1 and x.find('.pdf') == -1] 
     epi_titulos = []
     index = []
 
@@ -280,13 +301,14 @@ def get_episodes(magnetico):
 
 
 def select_resolution():
+    global window        
     c = 1
     for x in resolut:
         print([c], x)
         c += 1
 
-    layout = [[sg.Listbox(resolut, size=(60, 18), font='Arial 18')],
-              [sg.OK(), sg.Button('Voltar')]]
+    layout = [[sg.Listbox(resolut, size=(70, 18), font='Arial 18')],
+              [sg.Button('  OK   '), sg.Button('Voltar')]]
     window = sg.Window('Resolut', layout, icon=icone)
     event, values = window.read()
     
@@ -294,7 +316,6 @@ def select_resolution():
         window.close()
         main()
     window.close()
-
 
     posit = 666
     for p in range(0, len(resolut)):
@@ -306,7 +327,8 @@ def select_resolution():
 
 
 def peneira():
-    global resolut, magnetico
+    global resolut, magnetico, window
+    
     if serie:
         url_magnetico = select_resolution()
         episodes = get_episodes(url_magnetico)
@@ -320,39 +342,69 @@ def peneira():
 
 
 def options():
-    global opt, serie
-
-    mag_final, index = peneira()
-    
+    global opt, serie    
     
     # Faz streming enquanto realiza o download
     if opt == 1:
+        mag_final, index = peneira()
+        layout = [[sg.Text('Aguarde um instante...')]]
+        window = sg.Window('Peerflix', layout, icon=icone)
+        event, values = window.Read(timeout=100)
+        
         print("\nAguarde o carregamento... \nEnjoy!!\n")
+        # Caso não seja a primeira vez de uso do aplicativo [use] terá valor 666
         if use == 666:
+            # Se for alguma série, o index mudará para o índice referente ao episódio     
             if index == '':
-                start_host = subprocess.Popen(["peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+                start_host = subprocess.Popen([node_path, peerflix_path, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
             else:
-                start_host = subprocess.Popen(["peerflix", mag_final,"-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
-            time.sleep(3)
-            start_vlc = subprocess.run([os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True)
+                start_host = subprocess.Popen([node_path, peerflix_path, mag_final, "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+            # Verifica se há algum fluxo de transmissão no localhost
+            code = 0
+            while code != 200:
+                try:
+                    requests.get(f'http://{localhost}:8888/', stream=True).status_code
+                    code = 200
+                except:
+                    pass    
+            
+            start_and_wait(f'{os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe")} http://{localhost}:8888')
+            window.close()
+
+            try:                    
+                os.system('taskkill /IM "node.exe" /F')
+            except:
+                print('!!! Erro ao finalizar peerflix !!!')
                 
         else:
             if index == '':
-                start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", "peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+                start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", node_path, peerflix_path, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
             else:
-                start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", "peerflix", "-i", index, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
-                
-            time.sleep(3)
-            start_vlc = subprocess.run([os.path.join("dependencias", "refreshenv.cmd") + "&", os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe"), f"http://{localhost}:8888"], shell=True)
+                start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", node_path, peerflix_path, mag_final, "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
 
+            # Verifica se há algum fluxo de transmissão no localhost
+            code = 0
+            while code != 200:
+                try:
+                    requests.get(f'http://{localhost}:8888/', stream=True).status_code
+                    code = 200
+                except:
+                    pass
+              
+            start_and_wait(f'{os.path.join("dependencias", "refreshenv.cmd")} & {os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe")} http://{localhost}:8888')
+            window.close()
+            try:
+                os.system('taskkill /IM "node.exe" /F')
+            except:
+                print('!!! Erro ao finalizar peerflix !!!')
         
     # Somente faz o download
     elif opt == 2:
         print("\nDownload iniciado...\n")
         if use == 666:
-            start_host = subprocess.Popen(["peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")])
+            start_host = subprocess.Popen([node_path, peerflix_path, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")])
         else:
-            start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + " & peerflix", mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")])
+            start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd"), "&", node_path, peerflix_path, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")])
 
 
     # Retorna o link magnético
@@ -365,26 +417,19 @@ def options():
 
 def main():
     global tabelas, resolut, magnetico, use
-
     resolut = []
     magnetico = []
-
+    
     if use == 1:
         pass
     else:
         dependencias()     
-
+        
     tabelas = get_tables()
     magnetics_and_resolution_of_movies()
-    magnetics_and_resolution_of_series()
     magneticos_da_serie_completa()
+    magnetics_and_resolution_of_series()
     options()
-    process_status('vlc')
-
-    try:
-        os.system('taskkill /IM "node.exe" /F')
-    except:
-        print('!!! Erro ao finalizar peerflix !!!')
 
 
 while True:
