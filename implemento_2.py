@@ -138,7 +138,6 @@ def layout_inicial():
     return values[3]
 
 
-
 def url_scrape():
     busca = layout_inicial()
     busca = busca.split()
@@ -339,7 +338,6 @@ def peneira():
         url_magnetico = select_resolution()
         return [url_magnetico, '']
         
-
 
 def options():
     global opt, serie    
