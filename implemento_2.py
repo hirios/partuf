@@ -21,11 +21,7 @@ serie = None
 resolut = []
 magnetico = []
 localhost = socket.gethostbyname(socket.gethostname())
-os.system("mkdir %USERPROFILE%\Desktop\Filmes >nul 2>&1")
-try:
-    os.system('taskkill /IM "node.exe" /F')
-except:
-    print('!!! Erro ao finalizar peerflix !!!')
+os.popen('mkdir %USERPROFILE%\Desktop\Filmes >nul 2>&1 & taskkill /IM "node.exe" /F')
 
 
 def user():
@@ -62,7 +58,7 @@ def start_and_wait(programa):
     
     print("\n[+] Um novo processo foi iniciado") 
     def start(programa=programa):
-        os.system(programa)
+        subprocess.run(programa)
     processo = threading.Thread(target=start)
     processo.start()
     while processo.is_alive():
@@ -92,9 +88,9 @@ def dependencias():
             event, values = window.Read(timeout=100)
             print("[+] Iniciando instalação do Peerflix...")
             try:
-                os.system(os.path.join("nodejs", "npm") + " install -g peerflix")
+                subprocess.run(os.path.join("nodejs", "npm") + " install -g peerflix", shell=True)
             except:
-                os.system(os.path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
+                subprocess.run(os.path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
             window.close()
             os.system("cls")
         except:
@@ -123,7 +119,7 @@ def layout_inicial():
     event, values = window.read()
     if event == None:
         try:
-            os.system('taskkill /IM "node.exe" /F')
+            os.popen('taskkill /IM "node.exe" /F')
         except:
             print('!!! Erro ao finalizar peerflix !!!')
     window.close()
@@ -229,6 +225,7 @@ def magnetics_and_resolution_of_movies():
 
 def magnetics_and_resolution_of_series():
     """ PARA SERIES: Adiciona resolucoes e links magneticos as suas respectivas listas """
+
     global tabelas,  resolut, magnetico    
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
@@ -251,6 +248,7 @@ def magnetics_and_resolution_of_series():
 
 def magneticos_da_serie_completa():
     global serie, tabelas,  resolut, magnetico
+
     if len(magnetico) == 0:
         for tabela in range(0, len(tabelas)):
             single_table = BeautifulSoup(str(tabelas[tabela]), 'html.parser')
@@ -301,6 +299,7 @@ def get_episodes(magnetico):
 
 def select_resolution():
     global window        
+
     c = 1
     for x in resolut:
         print([c], x)
@@ -339,6 +338,7 @@ def peneira():
         return [url_magnetico, '']
         
 
+
 def options():
     global opt, serie    
     
@@ -370,7 +370,7 @@ def options():
             window.close()
 
             try:                    
-                os.system('taskkill /IM "node.exe" /F')
+                os.popen('taskkill /IM "node.exe" /F')
             except:
                 print('!!! Erro ao finalizar peerflix !!!')
                 
@@ -392,7 +392,7 @@ def options():
             start_and_wait(f'{os.path.join("dependencias", "refreshenv.cmd")} & {os.path.join("dependencias", "vlc", "App", "vlc", "vlc.exe")} http://{localhost}:8888')
             window.close()
             try:
-                os.system('taskkill /IM "node.exe" /F')
+                os.popen('taskkill /IM "node.exe" /F')
             except:
                 print('!!! Erro ao finalizar peerflix !!!')
         
@@ -404,7 +404,6 @@ def options():
         else:
             start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd"), "&", node_path, peerflix_path, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")])
 
-
     # Retorna o link magnético
     elif opt == 3:
         print("\nLink magnético:\n")
@@ -415,14 +414,15 @@ def options():
 
 def main():
     global tabelas, resolut, magnetico, use
+
     resolut = []
     magnetico = []
-    
+
     if use == 1:
         pass
     else:
         dependencias()     
-        
+
     tabelas = get_tables()
     magnetics_and_resolution_of_movies()
     magneticos_da_serie_completa()
