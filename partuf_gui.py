@@ -1,10 +1,27 @@
+import os
+import importlib
+
+def bible(lib):
+    try:
+        if importlib.import_module(lib):
+            return importlib.import_module(lib)
+    except:
+        try:
+            os.system(f'pip install {lib}')
+            return importlib.import_module(lib)
+        except:
+            os.system(f'sudo pip install {lib}')
+            return importlib.import_module(lib)
+        
+bs4 = bible("bs4")
+PySimpleGUI = bible("PySimpleGUI")
+cfscrape = bible("cfscrape")
 from bs4 import BeautifulSoup
 import PySimpleGUI as sg
 from shutil import which
 from zipfile import ZipFile
 import threading   
 import subprocess
-import cfscrape
 import socket
 import os
 import time
