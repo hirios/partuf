@@ -38,7 +38,7 @@ serie = None
 resolut = []
 magnetico = []
 localhost = socket.gethostbyname(socket.gethostname())
-os.popen('mkdir %USERPROFILE%\Desktop\Filmes >nul 2>&1 & taskkill /IM "node.exe" /F')
+os.popen('mkdir %USERPROFILE%\Desktop\Filmes >nul 2>&1 & taskkill /IM "node.exe" /F >nul 2>&1')
 
 
 def user():
@@ -93,21 +93,21 @@ def dependencias():
             print("[+] Iniciando download do Node...")
             pacotes()
             print("[+] Instalando node.js")
-            start_and_wait("dependencias\\node.msi")
+            start_and_wait("msiexec /i dependencias\\node.msi")
             use = 1
         os.system("cls")
         
     
-    if not which(f"{peerflix_path}"):
+    if not which(peerflix_path):
         try:
             layout = [[sg.Text('Instalando peerflix...')]]
             window = sg.Window('Peerflix', layout, icon=icone)
             event, values = window.Read(timeout=100)
             print("[+] Iniciando instalação do Peerflix...")
-            try:
-                subprocess.run(os.path.join("nodejs", "npm") + " install -g peerflix", shell=True)
-            except:
+            if not which(os.path.join("nodejs", "npm")):
                 subprocess.run(os.path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
+            else:
+                subprocess.run(os.path.join("nodejs", "npm") + " install -g peerflix", shell=True)
             window.close()
             os.system("cls")
         except:
@@ -448,7 +448,6 @@ def main():
     magnetics_and_resolution_of_movies()
     magneticos_da_serie_completa()
     magnetics_and_resolution_of_series()
-    
     options()
 
 
