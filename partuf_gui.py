@@ -56,7 +56,7 @@ def restrear_path():
     if which('peerflix'):
         peerflix_path = which('peerflix')
     if which('node'):
-        node_path = which('node')
+        node_path = None
 
 
 def pacotes():
