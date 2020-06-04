@@ -50,6 +50,15 @@ peerflix_path = f"C:\\Users\\{user()}\\AppData\\Roaming\\npm\\node_modules\\peer
 node_path = "nodejs\\node.exe"
 
 
+def restrear_path():
+    global peerflix_path, node_path
+    
+    if which('peerflix'):
+        peerflix_path = which('peerflix')
+    if which('node'):
+        node_path = which('node')
+
+
 def pacotes():
     print("[+] Fazendo download de dependêndencias")
     try:
@@ -448,6 +457,7 @@ def main():
     magnetics_and_resolution_of_movies()
     magneticos_da_serie_completa()
     magnetics_and_resolution_of_series()
+    restrear_path()
     options()
 
 
