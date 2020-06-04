@@ -51,12 +51,10 @@ node_path = "nodejs\\node.exe"
 
 
 def restrear_path():
-    global peerflix_path, node_path
+    global node_path
     
-    if which('peerflix'):
-        peerflix_path = which('peerflix')
     if which('node'):
-        node_path = None
+        node_path = 'node'
 
 
 def pacotes():
