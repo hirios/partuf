@@ -265,7 +265,7 @@ def magnetics_and_resolution_of_series():
                 for quali in range(0, len(html_qualidades)):
                     resolut.append(f"{html_num_epi[quali].string.replace('Ep.', '-')} {'->>'} {html_qualidades[quali].string} {strong.string}")
                 for link_mag in range(len(html_magnetic)):
-                    magnetico.append(str(html_magnetic[quali]).split('"')[3])
+                    magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
             except:
                 pass
 
@@ -290,7 +290,11 @@ def magneticos_da_serie_completa():
                     magnetico.append(str(html_magnetic[link_mag]).split('"')[3])
             except:
                 pass
-        serie = True
+            
+        if len(magnetico) == 0:
+            serie = False
+        else:
+            serie = True
 
 
 def get_episodes(magnetico):
@@ -361,7 +365,6 @@ def peneira():
         url_magnetico = select_resolution()
         return [url_magnetico, '']
         
-
 
 def options():
     global opt, serie    
