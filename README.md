@@ -1,17 +1,29 @@
 # Partuf
 Busque e assista streaming de filmes enquanto faz download via torent (link magnêtico). 
+Além da opção de download, você pode apenas fazer o download do seu filme/série ou pegar o link magnético referente ao tal.
 
-obs: Partuf GUI só funciona no windows
+
+Obs: Partuf GUI só funciona no windows
 
 
-# Modo de uso:
+# INSTALAÇÃO:
 
-Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no terminal (se você tiver o pip, node e npm instalados):
+Caso esteja utilizando o Partuf GUI, o script foi feito para instalar automaticamente suas próprias dependencias, então apenas rode o comando:
+```
+python partug_gui.py
+```
+
+Caso você esteja utilizando o Partuf no modo terminal, você terá que:
+
+1) Instale primeiramente o vlc na sua máquina
+
+2) Depois dê os seguintes comandos no terminal 
 
 ```
 pip install bs4 cfscrape PySimpleGUI huepy fire
 ```
 
+3) Instale o Node e dê o seguinte comando: 
 ```
 npm install -g peerflix
 ```
@@ -21,17 +33,19 @@ Se você usa **línux**, tente usar esse comando em linha única:
 ```sudo pip install bs4 requests huepy fire cfscrape PySimpleGUI && sudo apt install nodejs && sudo apt install npm && sudo npm install -g peerflix && sudo apt install vlc```
 
 
-**Versão com GUI**:
-
-```
-python partuf_gui.py
-```
 
 ![Image description](https://user-images.githubusercontent.com/35049559/72764850-745d7000-3bc8-11ea-802a-f2cbb1f14887.png)
 ![Image description](https://user-images.githubusercontent.com/35049559/72764851-74f60680-3bc8-11ea-8261-49d0d0bec2eb.png)
 ![Image description](https://user-images.githubusercontent.com/35049559/72764852-74f60680-3bc8-11ea-96e2-8ba7e6059a53.png)
 ![Image description](https://user-images.githubusercontent.com/35049559/72764853-758e9d00-3bc8-11ea-8981-7ffb56e43260.png)
 
+
+# Modo de uso:
+
+**Versão GUI**:
+```
+python partuf_gui.py
+```
 
 **Versão console**:
 
