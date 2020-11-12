@@ -1,6 +1,6 @@
 # Partuf
 Busque e assista streaming de filmes enquanto faz download via torent (link magnêtico). 
-Além da opção de download, você pode apenas fazer o download do seu filme/série ou pegar o link magnético referente ao tal.
+Além da opção de download, você pode apenas fazer o streaming do seu filme/série ou pegar o link magnético referente ao tal.
 
 
 Obs: Partuf GUI só funciona no windows
