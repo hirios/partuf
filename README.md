@@ -1,6 +1,9 @@
 # Partuf
 Busque e assista streaming de filmes enquanto faz download via torent (link magnêtico). 
 
+obs: Partuf GUI só funciona no windows
+
+
 # Modo de uso:
 
 Instale primeiramente o vlc na sua máquina, depois dê os seguintes comandos no terminal (se você tiver o pip, node e npm instalados):
