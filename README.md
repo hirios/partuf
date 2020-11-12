@@ -10,7 +10,7 @@ Obs: Partuf GUI só funciona no windows
 
 Caso esteja utilizando o Partuf GUI, o script foi feito para instalar automaticamente suas próprias dependencias, então apenas rode o comando:
 ```
-python partug_gui.py
+python partuf_gui.py
 ```
 
 Caso você esteja utilizando o Partuf no modo terminal, você terá que:
