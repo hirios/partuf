@@ -56,12 +56,12 @@ python partuf.py
 
 2) Para somente baixar o filme/série: 
 ```
-python partuf.py 1
+python partuf.py 2
 ```
 
 3) Para capturar o link magnético do filme/série: 
 ```
-python partuf.py 2
+python partuf.py 3
 ```
 
 ![Image description](https://scontent-gru1-1.xx.fbcdn.net/v/t1.0-9/82711125_2302878316478332_8732694773728542720_n.jpg?_nc_cat=108&_nc_ohc=k1Z8it6jqm8AX8dfsiA&_nc_ht=scontent-gru1-1.xx&oh=3ddb4b038b46109f3bc325f55add05b9&oe=5ED224D7)
