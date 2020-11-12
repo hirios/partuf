@@ -25,6 +25,7 @@ import subprocess
 import socket
 import os
 import time
+import requests as request
 requests = cfscrape.create_scraper()
 
 
@@ -59,22 +60,47 @@ def restrear_path():
 
 def pacotes():
     print("[+] Fazendo download de dependêndencias")
-    try:
-        zip_html = requests.get("https://www71.zippyshare.com/v/UQmnOz27/file.html").text.replace('(','"'). replace(')', '"')
-        zip_html = zip_html.split('"')
-        index = zip_html.index("/d/UQmnOz27/")
-        url_zip = "https://www71.zippyshare.com/d/UQmnOz27/" + str(eval(zip_html[index + 2])) + "/dependencias.zip"
+
         
-        arquivo = requests.get(url_zip)                         
-        with open("requisitos.zip", "wb") as r:
-            r.write(arquivo.content)
+    def download_file_from_google_drive(id, destination):
+        URL = "https://docs.google.com/uc?export=download"
+
+        session = request.Session()
+
+        response = session.get(URL, params = { 'id' : id }, stream = True)
+        token = get_confirm_token(response)
+
+        if token:
+            params = { 'id' : id, 'confirm' : token }
+            response = session.get(URL, params = params, stream = True)
+
+        save_response_content(response, destination)
         
-        with ZipFile("requisitos.zip", "r") as extract:
-                extract.extractall()
-        os.remove("requisitos.zip")
-        os.system("cls")
-    except:
-        print("!!!!! Servidor de dependências não inoperante !!!!!")
+
+    def get_confirm_token(response):
+        for key, value in response.cookies.items():
+            if key.startswith('download_warning'):
+                return value
+
+        return None
+
+
+    def save_response_content(response, destination):
+        CHUNK_SIZE = 32768
+
+        with open(destination, "wb") as f:
+            for chunk in response.iter_content(CHUNK_SIZE):
+                if chunk: # filter out keep-alive new chunks
+                    f.write(chunk)
+
+    file_id = '1ETbuo7sJ32WuRuWkyMOZhdLF6uA8-Tdh'
+    destination = 'requisitos.zip'
+    download_file_from_google_drive(file_id, destination)
+        
+    with ZipFile("requisitos.zip", "r") as extract:
+        extract.extractall()
+
+    os.remove("requisitos.zip")
 
 
 def start_and_wait(programa):
@@ -99,9 +125,7 @@ def dependencias():
         else:
             print("[+] Iniciando download do Node...")
             pacotes()
-            print("[+] Instalando node.js")
-            start_and_wait("msiexec /i dependencias\\node.msi")
-            use = 1
+            print('Download completo')
         os.system("cls")
         
     
@@ -112,6 +136,7 @@ def dependencias():
             event, values = window.Read(timeout=100)
             print("[+] Iniciando instalação do Peerflix...")
             if not which(os.path.join("nodejs", "npm")):
+                print('Tentando instalar Peerflix pelo Node da PATH do Windows')
                 subprocess.run(os.path.join("dependencias", "refreshenv.cmd") + " & npm install -g peerflix")
             else:
                 subprocess.run(os.path.join("nodejs", "npm") + " install -g peerflix", shell=True)
