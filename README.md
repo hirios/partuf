@@ -51,7 +51,7 @@ python partuf_gui.py
 
 1) Para assistir ao streaming do filme/série:
 ```
-python partuf.py
+python partuf.py 1
 ```
 
 2) Para somente baixar o filme/série: 
