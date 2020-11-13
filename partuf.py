@@ -130,12 +130,12 @@ def Options(options):
     # Faz streming enquanto realiza o download
     if options == 1:
         print("\nAguarde o carregamento... \nEnjoy!!\n")
-        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
+        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"], shell=True)
         
     # Somente faz o download
     elif options == 2:
         print("\nDownload iniciado...\n")
-        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
+        start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()], shell=True)
         
     # Retorna o link magnético
     elif options == 3:
