@@ -117,19 +117,26 @@ def select_resolution():
     return mag_final
 
 
-def options(numero=1):
+def update_options(number):
     global options
-    options = int(numero)
+
+    options = number
+
+    
+def Options(options):
+    options = int(options)
 
     mag_final = select_resolution()
     # Faz streming enquanto realiza o download
     if options == 1:
         print("\nAguarde o carregamento... \nEnjoy!!\n")
         start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd(), "--vlc"])
+        
     # Somente faz o download
     elif options == 2:
         print("\nDownload iniciado...\n")
         start = subprocess.check_call(["peerflix", mag_final, "--path", os.getcwd()])
+        
     # Retorna o link magnético
     elif options == 3:
         print("\nLink magnético:\n")
@@ -137,9 +144,11 @@ def options(numero=1):
         print()
 
 
+fire.Fire(update_options)
+
 while True:
-    if __name__ == '__main__':
-        tabelas = get_tables()
-        magnetics_and_resolution_of_movies()
-        magnetics_and_resolution_of_series()
-        fire.Fire(options)
+    tabelas = get_tables()
+    magnetics_and_resolution_of_movies()
+    magnetics_and_resolution_of_series()
+    Options(options)
+        
