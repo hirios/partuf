@@ -34,6 +34,18 @@ magnetico = []
 localhost = socket.gethostbyname(socket.gethostname())
 
 
+def getLink(MAGNETIC):
+    HASH = MAGNETIC.split(':')[-1]
+    url = f"https://itorrents.org/torrent/{HASH}.torrent"
+    return url
+
+
+def downloadTorrent(linkTorrent):
+    out = requests.get(linkTorrent)
+    with open('torrent.torrent', 'wb') as f:
+        f.write(out.content)
+
+
 def url_scrape():
     busca = input('Digite o nome do filme: ')
     busca = busca.split()
@@ -44,7 +56,7 @@ def url_scrape():
     concatenando = "".join(termos_da_busca)
     # Último termo é aderido a url de busca
     url = concatenando + busca[-1]
-    url_final = 'https://www.baixarfilmetorrent.net/?s='+url
+    url_final = 'https://www.baixafilme.net/?s='+url
     return url_final
 
 
@@ -217,13 +229,15 @@ def peneira():
 def options():
     global serie    
     
-    mag_final, index = peneira()        
+    mag_final, index = peneira()
+    downloadTorrent(getLink(mag_final))
+    
     print("\nAguarde o carregamento... \nEnjoy!!\n")
 
     if index == '':
-        start_host = subprocess.Popen(['peerflix', mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+        start_host = subprocess.Popen(['peerflix', 'torrent.torrent', "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
     else:
-        start_host = subprocess.Popen(['peerflix', mag_final, "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+        start_host = subprocess.Popen(['peerflix', 'torrent.torrent', "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
 
 
 def main():
