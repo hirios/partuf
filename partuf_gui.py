@@ -41,6 +41,18 @@ localhost = socket.gethostbyname(socket.gethostname())
 os.popen('mkdir %USERPROFILE%\Desktop\Filmes >nul 2>&1 & taskkill /IM "node.exe" /F >nul 2>&1')
 
 
+def getLink(MAGNETIC):
+    HASH = MAGNETIC.split(':')[-1]
+    url = f"https://itorrents.org/torrent/{HASH}.torrent"
+    return url
+
+
+def downloadTorrent(linkTorrent):
+    out = requests.get(linkTorrent)
+    with open('torrent.torrent', 'wb') as f:
+        f.write(out.content)
+
+
 def user():
         user = os.popen("whoami").read().split("\\")[1].strip()
         return user
@@ -400,9 +412,6 @@ def options():
         resolut_fixo = None
         magnetico_fixo = None
 
-        print('--------')
-        print(resolut)
-
         while True:
             if not resolut_fixo and not magnetico_fixo:
                 resolut_fixo = resolut
@@ -412,6 +421,8 @@ def options():
                 magnetico = magnetico_fixo
 
             mag_final, index = peneira()
+            downloadTorrent(getLink(mag_final))
+
             layout = [[sg.Text('Aguarde um instante...')]]
             window = sg.Window('Peerflix', layout, icon=icone)
             event, values = window.Read(timeout=100)
@@ -421,9 +432,9 @@ def options():
             if use == 666:
                 # Se for alguma série, o index mudará para o índice referente ao episódio     
                 if index == '':
-                    start_host = subprocess.Popen([node_path, peerflix_path, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+                    start_host = subprocess.Popen([node_path, peerflix_path, 'torrent.torrent', "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
                 else:
-                    start_host = subprocess.Popen([node_path, peerflix_path, mag_final, "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+                    start_host = subprocess.Popen([node_path, peerflix_path, 'torrent.torrent', "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
                 # Verifica se há algum fluxo de transmissão no localhost
                 code = 0
                 while code != 200:
@@ -443,9 +454,9 @@ def options():
                     
             else:
                 if index == '':
-                    start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", node_path, peerflix_path, mag_final, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+                    start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", node_path, peerflix_path, 'torrent.torrent', "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
                 else:
-                    start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", node_path, peerflix_path, mag_final, "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+                    start_host = subprocess.Popen([os.path.join("dependencias", "refreshenv.cmd") + "&", node_path, peerflix_path, 'torrent.torrent', "-i", index, "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
 
                 # Verifica se há algum fluxo de transmissão no localhost
                 code = 0
@@ -466,10 +477,13 @@ def options():
     # Somente faz o download
     elif opt == 2:
         mag_final, index = peneira()
+
+        downloadTorrent(getLink(mag_final))
+
         sg.Window('Download:', [[sg.Multiline(default_text=f'', size=(len(mag_final), 10))]]).Read()
         print("\nDownload iniciado...\n")
         if use == 666:
-            start_host = subprocess.run([node_path, peerflix_path, mag_final, "-q", "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
+            start_host = subprocess.run([node_path, peerflix_path, 'torrent.torrent', "-q", "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
         else:
             start_host = subprocess.run([os.path.join("dependencias", "refreshenv.cmd"), "&", node_path, peerflix_path, mag_final, "-q", "--path", os.path.join("%USERPROFILE%", "Desktop", "Filmes")], shell=True)
         window.close()
