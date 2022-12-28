@@ -1,3 +1,6 @@
+# Esse código está obsoleto
+
+
 # Partuf
 Busque e assista streaming de filmes/séries enquanto faz download via torent (link magnêtico). 
 Além da opção de streaming, você pode apenas fazer o download do seu filme/série ou pegar o link magnético referente ao tal.
